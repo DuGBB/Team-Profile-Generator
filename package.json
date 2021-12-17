@@ -1,0 +1,31 @@
+{
+  "name": "team-profile-generator",
+  "version": "1.0.0",
+  "description": "Generating an org chart",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DuGBB/Team-Profile-Generator.git"
+  },
+  "keywords": [
+    "team",
+    "profile",
+    "generator",
+    "node.js",
+    "npm",
+    "inquirer",
+    "jest"
+  ],
+  "author": "Donald Biggers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DuGBB/Team-Profile-Generator/issues"
+  },
+  "homepage": "https://github.com/DuGBB/Team-Profile-Generator#readme"
+}
