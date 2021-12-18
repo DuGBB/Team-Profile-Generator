@@ -57,45 +57,56 @@ const managerQuestions = () => {
             }
         }
     ]);
-}
+};
 
-const engineerQuestions = () => {
+const newMemberQuestions = memberData => {
+    if (!memberData.members) {
+        memberData.members = [];
+    }
     return inquirer.prompt([
+
+        {
+            type: 'list',
+            name: 'menu',
+            message: 'Choose to add either an Engineer or an Itern.',
+            choices: ['Engineer', 'Intern']
+        
+        },
         {
             type: 'input',
-            name: 'engineerName',
-            message: 'Provide your name. (Required)',
+            name: 'name',
+            message: 'Provide the team members name. (Required)',
             validate: nameInput => {
                 if (nameInput) {
                     return true;
                 } else {
-                    console.log('Please provide your name!');
+                    console.log('Please provide the team members name!');
                     return false;
                 }
             }
         },
         {
             type: 'input',
-            name: 'engineerId',
-            message: 'Provide your ID. (Required)',
+            name: 'id',
+            message: 'Provide the team members ID. (Required)',
             validate: idInput => {
                 if (idInput) {
                     return true;
                 } else {
-                    console.log('Please provide your ID!');
+                    console.log('Please provide the team members ID!');
                     return false;
                 }
             }
         },
         {
             type: 'input',
-            name: 'engineerEmail',
-            message: 'Provide your email address. (Required)',
+            name: 'email',
+            message: 'Provide the team members email address. (Required)',
             validate: emailInput => {
                 if (emailInput) {
                     return true;
                 } else {
-                    console.log('Please provide your email address!');
+                    console.log('Please provide the team members email address!');
                     return false;
                 }
             }
@@ -103,64 +114,68 @@ const engineerQuestions = () => {
         {
             type: 'input',
             name: 'github',
-            message: 'Provide your GitHub username. (Required)',
+            message: 'Provide the engineers GitHub username. (Required)',
             validate: githubInput => {
                 if (githubInput) {
                     return true;
                 } else {
-                    console.log('Please provide your GitHub username!');
+                    console.log('Please provide the engineers GitHub username!');
+                    return false;
+                }
+            },
+            when: ({ menu }) => {
+                if (menu === 'Engineer') {
+                    return true;
+                } else {
+                    return false;
+                }
+            } 
+        },
+        {
+            type: 'input',
+            name: 'school',
+            message: 'Provide the interns school. (Required)',
+            validate: schoolInput => {
+                if (schoolInput) {
+                    return true;
+                } else {
+                    console.log('Please provide the interns school!');
+                    return false;
+                }
+            },
+            when: ({ menu }) => {
+                if (menu === 'Intern') {
+                    return true;
+                } else {
                     return false;
                 }
             }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAdd',
+            message: 'Would you like to add another team mate',
+            default: false
         }
-    ]);
-}
+   
+    ]
+    ).then(memberNewData => {
+        memberData.members.push(memberNewData);
+        if (memberData.confirmAdd) {
+            return newMemberQuestions(memberData);
+        } else {
+            return memberData;
+        }
+    });
+};
 
-const internQuestions = () => {
-    return inquirer.prompt([
-        {
-            type: 'input',
-            name: 'internName',
-            message: 'Provide your name. (Required)',
-            validate: nameInput => {
-                if (nameInput) {
-                    return true;
-                } else {
-                    console.log('Please provide your name!');
-                    return false;
-                }
-            }
-        },
-        {
-            type: 'input',
-            name: 'internId',
-            message: 'Provide your ID. (Required)',
-            validate: idInput => {
-                if (idInput) {
-                    return true;
-                } else {
-                    console.log('Please provide your ID!');
-                    return false;
-                }
-            }
-        },
-        {
-            type: 'input',
-            name: 'internEmail',
-            message: 'Provide your email address. (Required)',
-            validate: emailInput => {
-                if (emailInput) {
-                    return true;
-                } else {
-                    console.log('Please provide your email address!');
-                    return false;
-                }
-            }
-        },
-    ]);
-}
 
 function init() {
-   let managerAnwser = managerQuestions();
+    managerQuestions()
+    .then(newMemberQuestions)
+    .then(data => {
+        console.log(data);
+    });
     
 }
+ init();

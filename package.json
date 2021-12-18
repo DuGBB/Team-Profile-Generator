@@ -7,7 +7,9 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,10 @@
   },
   "homepage": "https://github.com/DuGBB/Team-Profile-Generator#readme",
   "dependencies": {
-    "inquirer-menu": "^1.0.0"
+    "inquirer": "^8.2.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15"
   }
 }
