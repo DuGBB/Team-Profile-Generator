@@ -161,7 +161,7 @@ const newMemberQuestions = memberData => {
     ]
     ).then(memberNewData => {
         memberData.members.push(memberNewData);
-        if (memberData.confirmAdd) {
+        if (memberNewData.confirmAdd) {
             return newMemberQuestions(memberData);
         } else {
             return memberData;
