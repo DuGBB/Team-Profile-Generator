@@ -1,7 +1,20 @@
 const inquirer = require('inquirer');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+const Manager = require('./lib/Manager');
 
-const managerQuestions = () => {
-    return inquirer.prompt([
+function Team() {
+    this.manager;
+    this.engineer = [];
+    this.intern = [];
+}
+
+Team.prototype.initializeTeam = function() {
+
+
+
+
+    inquirer.prompt([
         {
             type: 'input',
             name: 'managerName',
@@ -56,14 +69,18 @@ const managerQuestions = () => {
                 }
             }
         }
-    ]);
-};
+    ])
+    .then(({ managerName, managerId, managerEmail, officeNumber }) => {
+        this.manager = new Manager(managerName, managerId, managerEmail, officeNumber);
 
-const newMemberQuestions = memberData => {
-    if (!memberData.members) {
-        memberData.members = [];
-    }
-    return inquirer.prompt([
+        this.addNewTeamMember();
+    });
+
+    
+}
+
+Team.prototype.addNewTeamMember = function() {
+       inquirer.prompt([
 
         {
             type: 'list',
@@ -150,32 +167,48 @@ const newMemberQuestions = memberData => {
                     return false;
                 }
             }
-        },
-        {
-            type: 'confirm',
-            name: 'confirmAdd',
-            message: 'Would you like to add another team mate',
-            default: false
-        }
+        }//,
+        //{
+            // type: 'confirm',
+            // name: 'confirmAdd',
+            // message: 'Would you like to add another team mate',
+            // default: false
+        //}
    
     ]
-    ).then(memberNewData => {
-        memberData.members.push(memberNewData);
-        if (memberNewData.confirmAdd) {
-            return newMemberQuestions(memberData);
+    ).then(({ menu, name, id, email, github, school }) => {
+        console.log('AmIHere');
+        if (menu === 'Engineer') {
+            console.log('newEngineer');
+            this.engineer.push(new Engineer(name, id, email, github));
         } else {
-            return memberData;
+            console.log('newIntern');
+            this.intern.push(new Intern(name, id, email, school));
         }
+            this.addAnotherTeamMember();
+        
     });
 };
 
-
-function init() {
-    managerQuestions()
-    .then(newMemberQuestions)
-    .then(data => {
-        console.log(data);
-    });
-    
+Team.prototype.addAnotherTeamMember = function() {
+    inquirer
+        .prompt({
+            type: 'confirm',
+            name: 'confirmAdd',
+            message: 'Would you like to add another team mate?',
+            default: false
+        })
+        .then(({ confirmAdd }) => {
+            if (confirmAdd) {
+                this.addNewTeamMember();
+            } else {
+                this.createHtml();
+            }
+        });
 }
- init();
+
+Team.prototype.createHtml = function() {
+    console.log('BooYaah');
+}
+
+new Team().initializeTeam();
