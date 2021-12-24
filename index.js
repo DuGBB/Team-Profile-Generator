@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
+const fs = require('fs');
 
 function Team() {
     this.manager;
@@ -208,7 +209,46 @@ Team.prototype.addAnotherTeamMember = function() {
 }
 
 Team.prototype.createHtml = function() {
-    console.log('BooYaah');
+    let htmlBin = '';
+    htmlBin = this.manager.createEmployeeDiv();
+    for (let index = 0; index < this.engineer.length; index++) {
+        const element = this.engineer[index];
+        let engineerHtml = element.createEmployeeDiv();
+        htmlBin = `${htmlBin} ${engineerHtml}`;
+    }
+    for (let index = 0; index < this.intern.length; index++) {
+        const element = this.intern[index];
+        let internHtml = element.createEmployeeDiv();
+        htmlBin = `${htmlBin} ${internHtml}`;
+    }
+   // $cardDisplay.innerHTML = htmlBin;
+   let content = `
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header id="headerText">
+        <h1>My Team</h1>
+    </header>
+<section>
+    <div id="cardDisplay">
+       ${htmlBin}
+    </div>
+</section>
+<script src="./index.js"></script>
+</body>
+</html>`
+
+fs.writeFile('./dist/index.html',content, function (err) {
+    if (err) throw err;
+    console.log('Created File!');
+});
+
 }
 
 new Team().initializeTeam();
