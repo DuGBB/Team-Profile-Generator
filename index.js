@@ -4,13 +4,14 @@ const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
 const fs = require('fs');
 
+
 function Team() {
     this.manager;
     this.engineer = [];
     this.intern = [];
 }
 
-Team.prototype.initializeTeam = function() {
+Team.prototype.initializeTeam = function () {
 
 
 
@@ -71,24 +72,24 @@ Team.prototype.initializeTeam = function() {
             }
         }
     ])
-    .then(({ managerName, managerId, managerEmail, officeNumber }) => {
-        this.manager = new Manager(managerName, managerId, managerEmail, officeNumber);
+        .then(({ managerName, managerId, managerEmail, officeNumber }) => {
+            this.manager = new Manager(managerName, managerId, managerEmail, officeNumber);
 
-        this.addNewTeamMember();
-    });
+            this.addNewTeamMember();
+        });
 
-    
+
 }
 
-Team.prototype.addNewTeamMember = function() {
-       inquirer.prompt([
+Team.prototype.addNewTeamMember = function () {
+    inquirer.prompt([
 
         {
             type: 'list',
             name: 'menu',
             message: 'Choose to add either an Engineer or an Itern.',
             choices: ['Engineer', 'Intern']
-        
+
         },
         {
             type: 'input',
@@ -147,7 +148,7 @@ Team.prototype.addNewTeamMember = function() {
                 } else {
                     return false;
                 }
-            } 
+            }
         },
         {
             type: 'input',
@@ -170,12 +171,12 @@ Team.prototype.addNewTeamMember = function() {
             }
         }//,
         //{
-            // type: 'confirm',
-            // name: 'confirmAdd',
-            // message: 'Would you like to add another team mate',
-            // default: false
+        // type: 'confirm',
+        // name: 'confirmAdd',
+        // message: 'Would you like to add another team mate',
+        // default: false
         //}
-   
+
     ]
     ).then(({ menu, name, id, email, github, school }) => {
         console.log('AmIHere');
@@ -186,12 +187,12 @@ Team.prototype.addNewTeamMember = function() {
             console.log('newIntern');
             this.intern.push(new Intern(name, id, email, school));
         }
-            this.addAnotherTeamMember();
-        
+        this.addAnotherTeamMember();
+
     });
 };
 
-Team.prototype.addAnotherTeamMember = function() {
+Team.prototype.addAnotherTeamMember = function () {
     inquirer
         .prompt({
             type: 'confirm',
@@ -208,7 +209,7 @@ Team.prototype.addAnotherTeamMember = function() {
         });
 }
 
-Team.prototype.createHtml = function() {
+Team.prototype.createHtml = function () {
     let htmlBin = '';
     htmlBin = this.manager.createEmployeeDiv();
     for (let index = 0; index < this.engineer.length; index++) {
@@ -221,22 +222,24 @@ Team.prototype.createHtml = function() {
         let internHtml = element.createEmployeeDiv();
         htmlBin = `${htmlBin} ${internHtml}`;
     }
-   // $cardDisplay.innerHTML = htmlBin;
-   let content = `
+    // $cardDisplay.innerHTML = htmlBin;
+    let content = `
    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
     <header id="headerText">
-        <h1>My Team</h1>
+        <h1> <i class="material-icons" style="font-size:48px;color:red">group</i>  My Team</h1>
     </header>
 <section>
-    <div id="cardDisplay">
+    <div class="cardDisplay">
        ${htmlBin}
     </div>
 </section>
@@ -244,11 +247,26 @@ Team.prototype.createHtml = function() {
 </body>
 </html>`
 
-fs.writeFile('./dist/index.html',content, function (err) {
-    if (err) throw err;
-    console.log('Created File!');
-});
+    fs.writeFile('./dist/index.html', content, function (err) {
+        if (err) throw err;
+        console.log('Created File!');
+    });
 
+    this.copyFile();
+}
+
+Team.prototype.copyFile = function () {
+    fs.copyFile('./style.css', './dist/style.css', err => {
+        if (err) {
+            reject(err);
+            return
+        }
+
+        console.log({
+            ok: true,
+            message: 'Style File Created!'
+        });
+    });
 }
 
 new Team().initializeTeam();
